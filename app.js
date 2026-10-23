@@ -3,12 +3,13 @@ const P=[{id:1,s:12,i:"img/mesa-ratona.jpg",n:"Mesa ratona de pino",p:38000,m:"9
 const Z=[["Retiro en fábrica",0],["Zona 1 · cerca de la planta",6000],["Zona 2",12000],["Zona 3",20000]];
 const R=["Ninguno","Mueblería A","Mueblería B","Mueblería C"];
 const money=n=>"$ "+n.toLocaleString("es-AR");
+const cot=p=>{const d=p.m.split(" × ");return `<i class="cx">${d[0]} cm</i><i class="cy">${parseInt(d[2])} cm</i>`};
 const IC=['<rect x="8" y="24" width="48" height="7" rx="2"/><path d="M14 31v18M50 31v18M8 40h48"/>','<path d="M20 10v28h24V10"/><path d="M16 38h32M20 38v16M44 38v16"/>','<rect x="14" y="8" width="36" height="48" rx="2"/><path d="M14 20h36M14 32h36M14 44h36"/>','<path d="M6 48V20M58 48V32M6 38h52"/><rect x="12" y="26" width="14" height="10" rx="3"/><path d="M26 32h32v6"/>','<rect x="6" y="22" width="52" height="6" rx="2"/><path d="M12 28v22M52 28v22M24 28v14M40 28v14"/>','<rect x="16" y="14" width="32" height="38" rx="2"/><path d="M16 30h32M28 22h8M28 40h8"/>'];
 const ic=id=>`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${IC[id-1]}</svg>`;
 let cart={},orders=[],bot={q:0,h:0};
 const slots=[];for(let d=2;d<=4;d++){const s=new Date(Date.now()+d*864e5).toLocaleDateString("es-AR",{weekday:"short",day:"2-digit",month:"2-digit"});slots.push(s+" · mañana (8 a 12 h)",s+" · tarde (14 a 18 h)")}
 function go(n){$$(".sec").forEach((s,i)=>s.hidden=i!=n);$$(".tab").forEach((t,i)=>t.classList.toggle("on",i==n))}
-function shop(){$("#grid").innerHTML=P.map(p=>{const l=p.s-(cart[p.id]||0);return `<div class="pc"><div class="ph"><img src="${p.i}" alt="${p.n}" loading="lazy" onerror="this.remove()">${ic(p.id)}<span class="bd ${l<1?"low":l<=3?"mid":"ok"}">${l<1?"Sin stock":l<=3?"Quedan "+l:"Disponible"}</span></div><b>${p.n}</b><small>${p.w} · ${p.m}</small><div class="pr">${money(p.p)}</div><button onclick="add(${p.id})" ${l<1?"disabled":""}>${l<1?"Sin stock":"Agregar"}</button></div>`}).join("")}shop();
+function shop(){$("#grid").innerHTML=P.map(p=>{const l=p.s-(cart[p.id]||0);return `<div class="pc ${p.w}"><div class="ph"><img src="${p.i}" alt="${p.n}" loading="lazy" onerror="this.remove()">${ic(p.id)}${cot(p)}<span class="bd ${l<1?"low":l<=3?"mid":"ok"}">${l<1?"Sin stock":l<=3?"Quedan "+l:"Disponible"}</span></div><b>${p.n}</b><small>${p.w} · ${p.m}</small><div class="pr">${money(p.p)}</div><button onclick="add(${p.id})" ${l<1?"disabled":""}>${l<1?"Sin stock":"Agregar"}</button></div>`}).join("")}shop();
 $("#zn").innerHTML=Z.map((z,i)=>`<option value="${i}">${z[0]}${z[1]?" (+"+money(z[1])+")":""}</option>`).join("");
 $("#sl").innerHTML=slots.map(s=>`<option>${s}</option>`).join("");
 $("#rf").innerHTML=R.map((r,i)=>`<option value="${i}">${r}</option>`).join("");
