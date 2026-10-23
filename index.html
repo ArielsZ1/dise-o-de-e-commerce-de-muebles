@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fábrica a tu Casa · MVP Maderas del Norte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head><body>
+<header class="top"><div class="hd"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#c9f26b"/><circle cx="16" cy="16" r="9" fill="none" stroke="#0b3d2e" stroke-opacity=".6" stroke-width="1.6"/><circle cx="16" cy="16" r="4" fill="none" stroke="#0b3d2e" stroke-opacity=".6" stroke-width="1.6"/></svg><div><b>Maderas del Norte</b><span>Fábrica a tu Casa · MVP</span></div></div><nav><button class="tab on" onclick="go(0)">Tienda</button><button class="tab" onclick="go(1)">Automatización</button><button class="tab" onclick="go(2)">Panel y QR</button><button class="tab" onclick="go(3)">App móvil</button></nav></div></header>
+<main>
+<section class="sec" id="s0">
+<div class="hero"><span class="eq">Equivale a: plataforma e-commerce + pasarela de pago</span><h2>Muebles de pino y eucalipto, directo de fábrica</h2><p>Elegí, pagá y recibí en la fecha y franja que prefieras.</p></div>
+<div class="diff"><div class="dc"><i>1</i><b>Sin intermediarios</b><span>Compra directa a la fábrica, con entrega en la fecha y franja que elegís.</span></div><div class="dc"><i>2</i><b>Revendedores que ganan</b><span>Cada QR identifica al revendedor que trajo la venta y le paga comisión.</span></div><div class="dc"><i>3</i><b>Pedido que se coordina solo</b><span>Stock, producción y entrega se actualizan automáticamente.</span></div></div>
+<div class="shop"><div class="grid" id="grid"></div>
+<div class="box side"><b>Tu pedido</b><div id="cl"></div>
+<label for="nm">Nombre</label><input id="nm" placeholder="Nombre y apellido" oninput="drawCart()">
+<label for="zn">Zona de entrega</label><select id="zn" onchange="drawCart()"></select>
+<label for="sl">Fecha y franja de entrega</label><select id="sl"></select>
+<label for="rf">¿Llegaste por el QR de un revendedor?</label><select id="rf"></select>
+<div class="tot"><span>Total (con envío)</span><span id="tot">$ 0</span></div>
+<button id="ok" disabled>Confirmar pedido</button></div></div>
+</section>
+<section class="sec" id="s2" hidden>
+<h2>Automatización del pedido</h2><span class="eq">Equivale a: flujo en n8n</span>
+<p><small>Cada pedido de la tienda dispara este flujo automáticamente. Hacé un pedido o probá con uno de ejemplo.</small></p>
+<button class="go" onclick="demo()">Simular pedido de ejemplo</button>
+<div id="fl" style="margin-top:12px"></div><div class="wa" id="wa" hidden></div>
+</section>
+<section class="sec" id="s3" hidden>
+<h2>Panel de resultados</h2><span class="eq">Equivale a: planilla o tablero + QR dinámico</span>
+<div class="note"><b>Cómo leer este panel.</b> Cada tarjeta compara un resultado de la solución con la meta del desafío. <span class="bd ok">En meta</span> ya la alcanzó, <span class="bd mid">En camino</span> todavía no, <span class="bd no">Sin datos</span> aún no hay pedidos para medirla. Es una simulación: hacé pedidos en la Tienda y mirá cómo se mueven los números.</div>
+<div class="kg" id="k"></div>
+<div class="box"><b>Inventario (control de stock)</b> <small id="sa"></small><div style="overflow-x:auto"><table><tr><th>Producto</th><th>Stock</th><th>Estado</th><th></th></tr><tbody id="inv"></tbody></table></div><small>Cada pedido descuenta stock automáticamente y el sistema avisa cuando quedan 3 unidades o menos.</small></div>
+<div class="box"><b>Pedidos</b><div style="overflow-x:auto"><table><tr><th>N.º</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Entrega</th></tr><tbody id="ot"></tbody></table></div></div>
+<div class="box"><b>QR por revendedor</b><div class="qrw"><div><label for="qs">Revendedor</label><select id="qs"></select><small id="qu"></small></div><div id="qi"></div></div>
+<small>QR ilustrativo. En la solución real cada QR lleva a la tienda con el código del revendedor, para medir tráfico y pagar comisión por referido.</small>
+<table style="margin-top:8px"><tr><th>Revendedor</th><th>Pedidos referidos</th><th>Comisión (5% de ejemplo)</th></tr><tbody id="cm"></tbody></table></div>
+</section>
+<section class="sec" id="s4" hidden>
+<h2>App móvil del cliente</h2><span class="eq">Equivale a: app móvil (prototipo)</span>
+<p><small>Así compra y sigue su pedido el cliente desde el celular. Usa los mismos datos de la tienda: stock, carrito y pedidos.</small></p>
+<div class="phone"><div class="scr" id="ap"></div><div class="tb" id="tb"></div></div>
+</section>
+<p><small>Prototipo demostrativo con datos y precios ficticios, para un caso simulado.</small></p>
+</main>
+<button id="fab" aria-label="Abrir chat de ayuda"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11.5h7M8.5 14.5h4"/></svg></button>
+<div id="cw" hidden role="dialog" aria-label="Asistente conversacional">
+<div class="cwh"><div class="av">MN</div><div><b>Asistente de Fábrica a tu Casa</b><small>En línea · responde al instante</small></div><button id="cx" aria-label="Cerrar chat">&times;</button></div>
+<div id="ch"></div><div id="qr"></div>
+<div class="row"><input id="in" placeholder="Escribí tu consulta…" onkeydown="if(event.key==='Enter')free()"><button class="go" onclick="free()">Enviar</button></div>
+<small class="eqc">Equivale a: ManyChat en WhatsApp o Instagram</small></div>
+<div id="toast" hidden></div>
+<script src="app.js"></script></body></html>
