@@ -4,6 +4,7 @@ const Z=[["Retiro en fábrica",0],["Zona 1 · cerca de la planta",6000],["Zona 2
 const R=["Ninguno","Mueblería A","Mueblería B","Mueblería C"];
 const money=n=>"$ "+n.toLocaleString("es-AR");
 const cot=p=>{const d=p.m.split(" × ");return `<i class="cx">${d[0]} cm</i><i class="cy">${parseInt(d[2])} cm</i>`};
+const dueno=()=>document.body.classList.contains("dueno");
 const IC=['<rect x="8" y="24" width="48" height="7" rx="2"/><path d="M14 31v18M50 31v18M8 40h48"/>','<path d="M20 10v28h24V10"/><path d="M16 38h32M20 38v16M44 38v16"/>','<rect x="14" y="8" width="36" height="48" rx="2"/><path d="M14 20h36M14 32h36M14 44h36"/>','<path d="M6 48V20M58 48V32M6 38h52"/><rect x="12" y="26" width="14" height="10" rx="3"/><path d="M26 32h32v6"/>','<rect x="6" y="22" width="52" height="6" rx="2"/><path d="M12 28v22M52 28v22M24 28v14M40 28v14"/>','<rect x="16" y="14" width="32" height="38" rx="2"/><path d="M16 30h32M28 22h8M28 40h8"/>'];
 const ic=id=>`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${IC[id-1]}</svg>`;
 let cart={},orders=[],bot={q:0,h:0};
@@ -24,7 +25,7 @@ $("#ok").onclick=()=>{const it=Object.entries(cart).map(([i,q])=>({p:P.find(x=>x
 const o={nm:$("#nm").value.trim().replace(/</g,"&lt;"),zn:Z[$("#zn").value][0],sl:$("#sl").value,rf:$("#rf").value=="0"?"":R[$("#rf").value],tot:sub()+Z[$("#zn").value][1],u:it.reduce((a,x)=>a+x.q,0),it:it.map(x=>({id:x.p.id,q:x.q}))};
 cart={};$("#nm").value="";drawCart();place(o)};
 function demo(){if(P[0].s<1)return toast("Sin stock de la mesa ratona: reponga en Panel y QR > Inventario");place({nm:"Cliente de ejemplo",zn:Z[1][0],sl:slots[0],rf:"Mueblería A",tot:P[0].p+Z[1][1],u:1,it:[{id:1,q:1}]})}
-function place(o){o.id="MN-"+(1001+orders.length);o.st="Pedido recibido";orders.push(o);o.it.forEach(x=>P.find(p=>p.id==x.id).s-=x.q);shop();go(1);flow(o);panel()}
+function place(o){o.id="MN-"+(1001+orders.length);o.st="Pedido recibido";orders.push(o);o.it.forEach(x=>P.find(p=>p.id==x.id).s-=x.q);shop();dueno()?go(1):toast("¡Pedido confirmado! "+o.id+" · te avisamos la entrega por WhatsApp");flow(o);panel()}
 function flow(o){const S=["Webhook: pedido "+o.id+" recibido desde la tienda","Validar y descontar stock: "+o.it.map(x=>{const p=P.find(q=>q.id==x.id);return p.n+" × "+x.q+" (quedan "+p.s+")"}).join(", ")+(o.it.some(x=>P.find(q=>q.id==x.id).s<=3)?" · alerta de stock bajo":""),"Avisar a producción y despacho","Confirmar al cliente por WhatsApp (ManyChat)","Agendar entrega: "+o.zn+" · "+o.sl,"Registrar en el panel de KPIs"+(o.rf?" y comisión para "+o.rf:"")];
 $("#fl").innerHTML=S.map((s,i)=>`<div class="nd" id="n${i}"><i>${i+1}</i><span>${s}</span></div>`).join("");$("#wa").hidden=true;
 S.forEach((_,i)=>setTimeout(()=>{$("#n"+i).classList.add("on");if(i==3){$("#wa").innerHTML="<small>Mensaje al cliente</small><br>Hola "+o.nm+", recibimos tu pedido "+o.id+" por "+money(o.tot)+". Entrega: "+o.sl+" ("+o.zn+"). Respondé este mensaje si necesitás cambiar la franja.";$("#wa").hidden=false}},600*(i+1)));
@@ -81,3 +82,5 @@ else h=`<div class="ah"><b>${o?"Pedido "+o.id:"Mi pedido"}</b><small>${o?o.zn+" 
 $("#ap").innerHTML=h;$("#ap").scrollTop=sc;
 $("#tb").innerHTML=NAV.map(([k,l,d])=>`<button class="${mv==k?"on":""}" onclick="mgo('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg><span>${l}${k=="cart"&&n?" ("+n+")":""}</span></button>`).join("")}
 mob();
+function mode(d){document.body.classList.toggle("dueno",d);$("#md").textContent=d?"Salir de la vista del dueño":"Ingresar como dueño";$("#cw").hidden=true;go(d?2:0)}
+$("#md").onclick=()=>mode(!dueno());
